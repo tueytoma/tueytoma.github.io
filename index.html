@@ -1,36 +1,42 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-<title>Image preview example</title>
-<script type="text/javascript">
-oFReader = new FileReader(), rFilter = 'image/jpg';
-
-oFReader.onload = function (oFREvent) {
-  document.getElementById("uploadPreview").src = oFREvent.target.result;
-};
-
-function loadImageFile() {
-  if (document.getElementById("uploadImage").files.length === 0) { return; }
-  var oFile = document.getElementById("uploadImage").files[0];
-  if (!rFilter.test(oFile.type)) { alert("You must select a valid image file!"); return; }
-  oFReader.readAsDataURL(oFile);
-}
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>เมื่อ “พยาบาล” ไม่ได้ทำงานในโรงพยาบาล | Health at Home Blog</title><meta name=description content='รู้หรือไม่ว่า ? อาชีพ "พยาบาล" นั้น ไม่ได้จำกัดอยู่ในโรงพยาบาลเท่านั้น มาอ่านบทสัมภาษณ์ ของ คุณแนน รัชดาภรณ์ หงษ์ทอง หัวหน้าพยาบาล ของบริษัท Health at home ซึ่ง'><meta property=og:title content="เมื่อ “พยาบาล” ไม่ได้ทำงานในโรงพยาบาล"><meta property=og:description content='รู้หรือไม่ว่า ? อาชีพ "พยาบาล" นั้น ไม่ได้จำกัดอยู่ในโรงพยาบาลเท่านั้น มาอ่านบทสัมภาษณ์ ของ คุณแนน รัชดาภรณ์ หงษ์ทอง หัวหน้าพยาบาล ของบริษัท Health at home ซึ่ง'><meta property=og:image content=https://healthathome.in.th/blog/wp-content/uploads/2019/09/Startupnurse.jpg><meta property=og:url content=https://healthathome.in.th/newblog/%e0%b9%80%e0%b8%a1%e0%b8%b7%e0%b9%88%e0%b8%ad%e0%b8%9e%e0%b8%a2%e0%b8%b2%e0%b8%9a%e0%b8%b2%e0%b8%a5-%e0%b9%84%e0%b8%a1%e0%b9%88%e0%b8%88%e0%b8%b3%e0%b9%80%e0%b8%9b%e0%b9%87%e0%b8%99%e0%b8%95%e0%b9%89><meta property=og:image:width content=1040><meta property=og:image:height content=540><meta property=og:type content=article><meta property=og:site_name content="Health at Home"><meta name=twitter:title content="เมื่อ “พยาบาล” ไม่ได้ทำงานในโรงพยาบาล"><meta name=twitter:description content='รู้หรือไม่ว่า ? อาชีพ "พยาบาล" นั้น ไม่ได้จำกัดอยู่ในโรงพยาบาลเท่านั้น มาอ่านบทสัมภาษณ์ ของ คุณแนน รัชดาภรณ์ หงษ์ทอง หัวหน้าพยาบาล ของบริษัท Health at home ซึ่ง'><meta name=twitter:card content=summary_large_image><meta name=twitter:image content=https://healthathome.in.th/blog/wp-content/uploads/2019/09/Startupnurse.jpg><meta name=twitter:image:alt content="Health at Home"><meta property=og:image content=https://storage.healthathome.in.th/088b15b3-e45c-4511-acb3-87f0fded5835.png>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
 </head>
+<body>
+<h1>Camera 2</h1>
+<input id="filePic" type="file" name="image" accept="image/*" capture> 	
+    <center><img id="fotoImg" style="visibility: hidden;"></center>
+    
+<script>
+    oFReader = new FileReader();
+	
+    oFReader.onload = function (oFREvent) {		
+        document.getElementById("fotoImg").src = oFREvent.target.result;
+        document.getElementById("fotoImg").style.visibility = "visible"; 
+        var screenHeight = screen.availHeight;
+        screenHeight = screenHeight - 220;
+        document.getElementById("fotoImg").style.height = screenHeight;
+    }
+    
+    $(function() {
+        $("input:file").change(function (){
+            var input = document.querySelector('input[type=file]');
+            var oFile = input.files[0];
+            oFReader.readAsDataURL(oFile);	
+        })
+    })
+</script>
 
-<body onload="loadImageFile();">
-  <form name="uploadForm">
-    <table>
-      <tbody>
-        <tr>
-          <td><img id="uploadPreview" style="width: 100px; height: 100px;" src="" alt="Image preview" /></td>
-          <td><input id="uploadImage" type="file" name="myPhoto" onchange="loadImageFile();" /></td>
-        </tr>
-      </tbody>
-    </table>
+<style>
+    #fotoImg {
+        width: 98%;		
+    }
+</style>
 
-    <p><input type="submit" value="Send" /></p>
-  </form>
 </body>
 </html>
