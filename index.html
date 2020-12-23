@@ -8,19 +8,23 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
 </head>
 <body>
-<h1>Camera 2</h1>
-<input id="filePic" type="file" name="image" accept="image/*" capture> 	
-    <center><img id="fotoImg" style="visibility: hidden;"></center>
+	<div id="upload" class="form-selector _dp-f _fdrt-cl _mgt-37px _mgl-24px _mgr-24px _mgbt-104px">
+    <div class="_fs-22 _fw-500">กรุณายืนยันตัวตน</div>
+    <div class="_fs-16 _fw-400 _mgt-24px">กรุณายืนยันตัวตน</div>
+    <input id="input-profile" type="file" name="image" accept="image/*" capture class="_dp-n"> 	
+    <label id="person-profile" for="input-profile" class="_bdcl-neutral-25 _bdw-1px _bdrd-4px _w-100pct _mgt-16px _dp-f _jtfct-ct _alit-ct" style="height: calc(100vw - 48px); background-position: center; background-size: cover;">
+        <img id="camera-icon" src="https://storage.healthathome.in.th/f332d4e1-80f7-4974-beaf-5610d9ef240f.svg" alt="">
+    </label>
+</div>
+
+{{template "form-1-footer" .}}
     
 <script>
     oFReader = new FileReader();
 	
-    oFReader.onload = function (oFREvent) {		
-        document.getElementById("fotoImg").src = oFREvent.target.result;
-        document.getElementById("fotoImg").style.visibility = "visible"; 
-        var screenHeight = screen.availHeight;
-        screenHeight = screenHeight - 220;
-        document.getElementById("fotoImg").style.height = screenHeight;
+    oFReader.onload = function (oFREvent) {
+        document.getElementById("person-profile").style.backgroundImage = `url('${oFREvent.target.result}')`
+        document.getElementById("camera-icon").style.visibility = "hidden"; 
     }
     
     $(function() {
@@ -31,12 +35,5 @@
         })
     })
 </script>
-
-<style>
-    #fotoImg {
-        width: 98%;		
-    }
-</style>
-
 </body>
 </html>
