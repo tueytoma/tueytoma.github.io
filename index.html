@@ -22,15 +22,14 @@
     <title>HAH Test Camera</title>
 
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="../../../css/main.css">
 
 </head>
 
 <body>
 
-<div id="container" style="background-color: #F2F2F2;">
+<div id="container">
 
-    <h1>HAH test camera 2</h1>
+    <h1>HAH test camera 3</h1>
 
     <div class="select">
         <label for="videoSource">Video source: </label><select id="videoSource"></select>
@@ -66,6 +65,7 @@
     const canvas = window.canvas = document.querySelector('canvas')
     canvas.width = 480
     canvas.height = 360
+    const selectors = [videoSelect];
 
     const button = document.querySelector('button')
     button.onclick = function() {
@@ -86,17 +86,11 @@
             const deviceInfo = deviceInfos[i];
             const option = document.createElement('option');
             option.value = deviceInfo.deviceId;
-            if (deviceInfo.kind === 'audioinput') {
-            option.text = deviceInfo.label || `microphone ${audioInputSelect.length + 1}`;
-            audioInputSelect.appendChild(option);
-            } else if (deviceInfo.kind === 'audiooutput') {
-            option.text = deviceInfo.label || `speaker ${audioOutputSelect.length + 1}`;
-            audioOutputSelect.appendChild(option);
-            } else if (deviceInfo.kind === 'videoinput') {
-            option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
-            videoSelect.appendChild(option);
+            if (deviceInfo.kind === 'videoinput') {
+                option.text = deviceInfo.label || `camera ${videoSelect.length + 1}`;
+                videoSelect.appendChild(option);
             } else {
-            console.log('Some other kind of source/device: ', deviceInfo);
+                console.log('Some other kind of source/device: ', deviceInfo);
             }
         }
         selectors.forEach((select, selectorIndex) => {
@@ -106,16 +100,21 @@
         })
     }
 
+    function gotStream(stream) {
+        window.stream = stream; // make stream available to console
+        videoElement.srcObject = stream;
+        // Refresh button list in case labels have become available
+        return navigator.mediaDevices.enumerateDevices();
+    }
+
     function start() {
         if (window.stream) {
             window.stream.getTracks().forEach(track => {
             track.stop();
             })
         }
-        const audioSource = audioInputSelect.value
         const videoSource = videoSelect.value
         const constraints = {
-            audio: {deviceId: audioSource ? {exact: audioSource} : undefined},
             video: {deviceId: videoSource ? {exact: videoSource} : undefined}
         }
         navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
