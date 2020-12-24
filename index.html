@@ -1,39 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>เมื่อ “พยาบาล” ไม่ได้ทำงานในโรงพยาบาล | Health at Home Blog</title><meta name=description content='รู้หรือไม่ว่า ? อาชีพ "พยาบาล" นั้น ไม่ได้จำกัดอยู่ในโรงพยาบาลเท่านั้น มาอ่านบทสัมภาษณ์ ของ คุณแนน รัชดาภรณ์ หงษ์ทอง หัวหน้าพยาบาล ของบริษัท Health at home ซึ่ง'><meta property=og:title content="เมื่อ “พยาบาล” ไม่ได้ทำงานในโรงพยาบาล"><meta property=og:description content='รู้หรือไม่ว่า ? อาชีพ "พยาบาล" นั้น ไม่ได้จำกัดอยู่ในโรงพยาบาลเท่านั้น มาอ่านบทสัมภาษณ์ ของ คุณแนน รัชดาภรณ์ หงษ์ทอง หัวหน้าพยาบาล ของบริษัท Health at home ซึ่ง'><meta property=og:image content=https://healthathome.in.th/blog/wp-content/uploads/2019/09/Startupnurse.jpg><meta property=og:url content=https://healthathome.in.th/newblog/%e0%b9%80%e0%b8%a1%e0%b8%b7%e0%b9%88%e0%b8%ad%e0%b8%9e%e0%b8%a2%e0%b8%b2%e0%b8%9a%e0%b8%b2%e0%b8%a5-%e0%b9%84%e0%b8%a1%e0%b9%88%e0%b8%88%e0%b8%b3%e0%b9%80%e0%b8%9b%e0%b9%87%e0%b8%99%e0%b8%95%e0%b9%89><meta property=og:image:width content=1040><meta property=og:image:height content=540><meta property=og:type content=article><meta property=og:site_name content="Health at Home"><meta name=twitter:title content="เมื่อ “พยาบาล” ไม่ได้ทำงานในโรงพยาบาล"><meta name=twitter:description content='รู้หรือไม่ว่า ? อาชีพ "พยาบาล" นั้น ไม่ได้จำกัดอยู่ในโรงพยาบาลเท่านั้น มาอ่านบทสัมภาษณ์ ของ คุณแนน รัชดาภรณ์ หงษ์ทอง หัวหน้าพยาบาล ของบริษัท Health at home ซึ่ง'><meta name=twitter:card content=summary_large_image><meta name=twitter:image content=https://healthathome.in.th/blog/wp-content/uploads/2019/09/Startupnurse.jpg><meta name=twitter:image:alt content="Health at Home"><meta property=og:image content=https://storage.healthathome.in.th/088b15b3-e45c-4511-acb3-87f0fded5835.png>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+  <meta charset="utf-8">
 </head>
 <body>
-	<div id="upload" class="form-selector _dp-f _fdrt-cl _mgt-37px _mgl-24px _mgr-24px _mgbt-104px">
-    <div class="_fs-22 _fw-500">กรุณายืนยันตัวตน</div>
-    <div class="_fs-16 _fw-400 _mgt-24px">กรุณายืนยันตัวตน</div>
-    <input id="input-profile" type="file" name="image" accept="image/*" capture class="_dp-n"> 	
-    <label id="person-profile" for="input-profile" class="_bdcl-neutral-25 _bdw-1px _bdrd-4px _w-100pct _mgt-16px _dp-f _jtfct-ct _alit-ct" style="height: calc(100vw - 48px); background-position: center; background-size: cover;">
-        <img id="camera-icon" src="https://storage.healthathome.in.th/f332d4e1-80f7-4974-beaf-5610d9ef240f.svg" alt="">
-    </label>
-</div>
-
-{{template "form-1-footer" .}}
-    
-<script>
-    oFReader = new FileReader();
-	
-    oFReader.onload = function (oFREvent) {
-        document.getElementById("person-profile").style.backgroundImage = `url('${oFREvent.target.result}')`
-        document.getElementById("camera-icon").style.visibility = "hidden"; 
-    }
-    
-    $(function() {
-        $("input:file").change(function (){
-            var input = document.querySelector('input[type=file]');
-            var oFile = input.files[0];
-            oFReader.readAsDataURL(oFile);	
-        })
-    })
-</script>
+  <h1>Camera Test</h1>
+  <input type="file" id="mypic" accept="image/*" capture="camera">
+  <canvas></canvas>
+  <br>
+  <script>
+  var input = document.querySelector('input[type=file]'); // see Example 4
+  input.onchange = function () {
+    var file = input.files[0];
+    //upload(file);
+    drawOnCanvas(file);   // see Example 6
+    //displayAsImage(file); // see Example 7
+  };
+ 
+  function upload(file) {
+    var form = new FormData(),
+        xhr = new XMLHttpRequest();
+ 
+    form.append('image', file);
+    xhr.open('post', 'server.php', true);
+    xhr.send(form);
+  }
+ 
+  function drawOnCanvas(file) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var dataURL = e.target.result,
+          c = document.querySelector('canvas'), // see Example 4
+          ctx = c.getContext('2d'),
+          img = new Image();
+ 
+      img.onload = function() {
+        c.width = img.width;
+        c.height = img.height;
+        ctx.drawImage(img, 0, 0);
+      };
+ 
+      img.src = dataURL;
+    };
+ 
+    reader.readAsDataURL(file);
+  }
+ 
+  function displayAsImage(file) {
+    var imgURL = URL.createObjectURL(file),
+        img = document.createElement('img');
+ 
+    img.onload = function() {
+      URL.revokeObjectURL(imgURL);
+    };
+ 
+    img.src = imgURL;
+    document.body.appendChild(img);
+  }
+  </script>
+<!-- source: http://www.w3.org/TR/html-media-capture/ -->
 </body>
 </html>
