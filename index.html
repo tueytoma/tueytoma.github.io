@@ -2,7 +2,7 @@
 <head>
     <title>Html-Qrcode Demo</title>
 <body>
-    <h1>Q5</h1>
+    <h1>Q6</h1>
     <select name="camera" id="camera"></select>
     <div id="qr-scanner" style="width:500px"></div>
 </body>
@@ -10,6 +10,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     let $camera = document.getElementById("camera")
+    let html5QrCode
 
     Html5Qrcode.getCameras().then(devices => {
         for (let i = 0; i < devices.length; i++) {
@@ -20,18 +21,17 @@
         }
 
         if (devices && devices.length) {
-            StartCamera(devices[0].id)
+            html5QrCode = new Html5Qrcode('qr-scanner')
+            startCamera(devices[0].id)
         }
-
-        const html5QrCode = new Html5Qrcode('qr-scanner')
     }).catch(err => {})
 
     $camera.addEventListener('change', function() {
-        StopCamera()
-        StartCamera(this.value)
+        stopCamera()
+        startCamera(this.value)
     })
 
-    function StartCamera (cameraId) {
+    function startCamera (cameraId) {
         html5QrCode.start(
         cameraId, 
         {
