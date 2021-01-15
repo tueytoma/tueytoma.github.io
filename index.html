@@ -2,40 +2,48 @@
 <head>
     <title>Html-Qrcode Demo</title>
 <body>
-    QR2
+    <h1>Q3</h1>
     <select name="camera" id="camera"></select>
-    <div id="qr-reader" style="width:500px"></div>
-    <div id="qr-reader-results"></div>
+    <div id="qr-scanner" style="width:500px"></div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/1.2.4/html5-qrcode.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-   let $camera = document.getElementById("camera");
+    let $camera = document.getElementById("camera")
+    let cameraId
 
     Html5Qrcode.getCameras().then(devices => {
-        /**
-         * devices would be an array of objects of type:
-         * { id: "id", label: "label" }
-         */
-
-         for (let index = 0; index < devices.length; index++) {
-            let option = document.createElement("option");
-            option.text = devices[index].label
-            option.value = devices[index].id
+        for (let i = 0; i < devices.length; i++) {
+            let option = document.createElement("option")
+            option.text = devices[i].label
+            option.value = devices[i].id
             $camera.add(option, $camera[0]);
-         }
-
-         console.log(devices)
-        if (devices && devices.length) {
-            var cameraId = devices[0].id;
         }
-    }).catch(err => {
-    // handle err
-    })
-        $camera.addEventListener('change', function() {
+
+        if (devices && devices.length) {
+            cameraId = devices[0].id
+        }
+
+        const html5QrCode = new Html5Qrcode('qr-scanner')
+        
+        html5QrCode.start(
+        cameraId, 
+        {
+            fps: 10,    // Optional frame per seconds for qr code scanning
+            qrbox: 250  // Optional if you want bounded box UI
+        },
+        qrCodeMessage => {
+            let patient = `detail?id=${qrCodeMessage}`
+            window.open(patient, '_blank')
+        },
+        errorMessage => {})
+        .catch(err => {console.error(err)})
+    }).catch(err => {})
+
+    $camera.addEventListener('change', function() {
         alert(this.value)
     })
-    })
+})
 </script>
 </head>
 </html>
