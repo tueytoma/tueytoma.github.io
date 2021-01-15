@@ -2,6 +2,7 @@
 <head>
     <title>Html-Qrcode Demo</title>
 <body>
+    <select name="camera" id="camera"></select>
     <div id="qr-reader" style="width:500px"></div>
     <div id="qr-reader-results"></div>
 </body>
@@ -35,22 +36,28 @@
         html5QrcodeScanner.render(onScanSuccess);
     });
     document.addEventListener('DOMContentLoaded', function () {
+   let $camera = document.getElementById("camera");
+
     Html5Qrcode.getCameras().then(devices => {
         /**
          * devices would be an array of objects of type:
          * { id: "id", label: "label" }
          */
-        
-        for (let index = 0; index < devices.length; index++) {
-            alert(devices[index].label)
+
+         for (let index = 0; index < devices.length; index++) {
+            let option = document.createElement("option");
+            option.text = devices[index].label
+            option.value = devices[index].id
+            x.add(option, x[0]);
          }
+
+         console.log(devices)
         if (devices && devices.length) {
             var cameraId = devices[0].id;
-            // .. use this to start scanning.
         }
-        }).catch(err => {
-        // handle err
-        });
+    }).catch(err => {
+    // handle err
+    })
     })
 </script>
 </head>
