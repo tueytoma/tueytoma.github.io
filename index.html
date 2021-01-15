@@ -2,7 +2,7 @@
 <head>
     <title>Html-Qrcode Demo</title>
 <body>
-    <h1>Q6</h1>
+    <h1>Q7</h1>
     <select name="camera" id="camera"></select>
     <div id="qr-scanner" style="width:500px"></div>
 </body>
@@ -46,7 +46,7 @@
         .catch(err => {console.error(err)})
     }
 
-    function StopCamera () {
+    function stopCamera () {
         html5QrCode.stop().then(ignore => {
         // QR Code scanning is stopped.
         }).catch(err => {})
