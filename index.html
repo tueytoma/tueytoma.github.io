@@ -34,6 +34,24 @@
             "qr-reader", { fps: 10, qrbox: 250 });
         html5QrcodeScanner.render(onScanSuccess);
     });
+    document.addEventListener('DOMContentLoaded', function () {
+    Html5Qrcode.getCameras().then(devices => {
+        /**
+         * devices would be an array of objects of type:
+         * { id: "id", label: "label" }
+         */
+        
+        for (let index = 0; index < devices.length; index++) {
+            alert(devices[index].label)
+         }
+        if (devices && devices.length) {
+            var cameraId = devices[0].id;
+            // .. use this to start scanning.
+        }
+        }).catch(err => {
+        // handle err
+        });
+    })
 </script>
 </head>
 </html>
