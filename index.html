@@ -1,57 +1,80 @@
 <html>
 <head>
     <title>Html-Qrcode Demo</title>
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v1.9.8/dist/alpine.js" defer></script>
 <body>
-    <h1>Q7</h1>
-    <select name="camera" id="camera"></select>
-    <div id="qr-scanner" style="width:500px"></div>
+    <h1>Q1</h1>
+    <div class="_dp-f _fdrt-cl _alit-ct _w-100pct"
+     x-data="data()"
+     x-init="() => {
+        $watch('camera', () => {
+            stopCamera()
+            startCamera(this.value)
+        })
+     }">
+    <h1 class="_ffml-semibold _fw-600 _fs-40">QR Code Scanner</h1>
+    <select @change="camera = $event.target.value" name="camera" id="camera"></select>
+    <div id="qr-scanner" class="_mgt-48px _w-480px _bdw-2px _bdcl-white _bdrd-12px"></div>
+</div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/1.2.4/html5-qrcode.min.js"></script>
 <script>
+    window.data = function () {
+		return {
+            userID: '',
+            html5QrCode: {},
+        }
+    }
+    
     document.addEventListener('DOMContentLoaded', function () {
-    let $camera = document.getElementById("camera")
-    let html5QrCode
+        let $camera = document.getElementById('camera')
 
-    Html5Qrcode.getCameras().then(devices => {
-        for (let i = 0; i < devices.length; i++) {
-            let option = document.createElement("option")
-            option.text = devices[i].label
-            option.value = devices[i].id
-            $camera.add(option, $camera[0]);
-        }
-
-        if (devices && devices.length) {
-            html5QrCode = new Html5Qrcode('qr-scanner')
-            startCamera(devices[0].id)
-        }
-    }).catch(err => {})
-
-    $camera.addEventListener('change', function() {
-        stopCamera()
-        startCamera(this.value)
-    })
-
-    function startCamera (cameraId) {
-        html5QrCode.start(
-        cameraId, 
-        {
-            fps: 10,    // Optional frame per seconds for qr code scanning
-            qrbox: 250  // Optional if you want bounded box UI
-        },
-        qrCodeMessage => {
-            let patient = `detail?id=${qrCodeMessage}`
-            window.open(patient, '_blank')
-        },
-        errorMessage => {})
-        .catch(err => {console.error(err)})
-    }
-
-    function stopCamera () {
-        html5QrCode.stop().then(ignore => {
-        // QR Code scanning is stopped.
+        Html5Qrcode.getCameras().then(devices => {
+            for (let i = 0; i < devices.length; i++) {
+                let option = document.createElement('option')
+                option.text = devices[i].label
+                option.value = devices[i].id
+                $camera.add(option, $camera[0])
+                let option2 = document.createElement('option')
+                option2.text = 'dddd'
+                option2.value = devices[i].id
+                $camera.add(option2, $camera[0])
+            }
+    
+            if (devices && devices.length) {
+                html5QrCode = new Html5Qrcode('qr-scanner')
+                startCamera(devices[0].id)
+                stopCamera()
+            }
         }).catch(err => {})
-    }
-})
+
+        function startCamera (cameraId) {
+            html5QrCode.start(
+            cameraId, 
+            {
+                fps: 10,    // Optional frame per seconds for qr code scanning
+                qrbox: 250,  // Optional if you want bounded box UI
+                aspectRatio: 1.0 
+            },
+            qrCodeMessage => {
+                let patient = `detail?id=${qrCodeMessage}`
+                let isPatientID = /P[0-9]{7}$/g
+                if (userID !== qrCodeMessage && qrCodeMessage !== '' && qrCodeMessage.match(isPatientID).length === 1 ) {
+                    userID = qrCodeMessage
+                    console.log(userID, qrCodeMessage)
+                    window.open(patient, '_blank')
+                }
+            },
+            errorMessage => {})
+            .catch(err => {console.error(err)})
+        }
+
+        function StopCamera () {
+            html5QrCode.stop().then(ignore => {
+            // QR Code scanning is stopped.
+            }).catch(err => {})
+        }
+    })
 </script>
 </head>
 </html>
