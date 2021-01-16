@@ -3,7 +3,7 @@
     <title>Html-Qrcode Demo</title>
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v1.9.8/dist/alpine.js" defer></script>
 <body>
-    <h1>Q3</h1>
+    <h1>Q4</h1>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@9.0.1/public/assets/styles/choices.min.css">
 <div class="_dp-f _fdrt-cl _alit-ct _w-100pct"
      x-data="data()"
@@ -35,8 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
         itemSelectText: '',
     })
 
-    camera.clearStore()
-
     Html5Qrcode.getCameras().then(devices => {
         let list = []
         for (let i = 0; i < devices.length; i++) {
@@ -45,11 +43,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 label: devices[i].label
             })
         }
-
-        list.push({
-            value: 'ddd', 
-            label: 'dddddd'
-        })
 
         camera.clearStore().setValue(list).enable()
 
