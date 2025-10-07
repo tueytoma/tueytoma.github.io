@@ -3,39 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>แชร์รูปไป Facebook Story</title>
+  <title>แชร์รูปภาพด้วย Web Share API</title>
 </head>
 <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+  <h2>แชร์รูปภาพไป Facebook หรือ Story</h2>
 
-  <h2>แชร์รูปไป Facebook Story</h2>
   <button id="share-btn" style="padding: 10px 20px; font-size: 16px;">
-    📸 แชร์ไป Story 2
+    📤 แชร์รูปภาพ 3
   </button>
 
   <script>
-    function shareToFacebookStory(imageUrl) {
-      const storyUrl = `fb://story-camera?media_url=${encodeURIComponent(imageUrl)}`
-
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
-
-      if (isMobile) {
-        // ✅ พยายามเปิด Facebook App 2
-        window.location.href = storyUrl
-
-        // ⚠️ fallback กรณีเปิดไม่ติด
-        setTimeout(() => {
-          alert('ไม่สามารถเปิด Facebook Story ได้ ลองแชร์ด้วยมือแทนค้าบ ❤️')
-        }, 1500)
-      } else {
-        alert('การแชร์ไปยัง Story รองรับเฉพาะบน Mobile เท่านั้น')
+    async function shareImage(imageUrl, imageBlob) {
+      try {
+        // ✅ ถ้า browser รองรับ Web Share API + file sharing
+        if (navigator.canShare && navigator.canShare({ files: [new File([imageBlob], 'image.jpg', { type: 'image/jpeg' })] })) {
+          await navigator.share({
+            files: [new File([imageBlob], 'image.jpg', { type: 'image/jpeg' })],
+            title: 'Share to Facebook Story',
+            text: 'แชร์ภาพนี้ไปยัง Facebook Story 📸',
+          });
+          console.log('แชร์สำเร็จ');
+        } else if (navigator.share) {
+          // ✅ รองรับ share แต่ไม่รองรับไฟล์ (เช่น iOS Safari เก่า)
+          await navigator.share({
+            url: imageUrl,
+            title: 'Share to Facebook Story',
+            text: 'แชร์ภาพนี้ไปยัง Facebook 📸',
+          });
+        } else {
+          // ❌ ไม่มี Web Share API → เปิดลิงก์ Facebook แทน
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`,
+            '_blank'
+          );
+        }
+      } catch (error) {
+        console.log('ยกเลิกการแชร์หรือเกิดข้อผิดพลาด:', error);
       }
     }
 
-    // เมื่อกดปุ่ม
-    document.getElementById('share-btn').addEventListener('click', () => {
-      shareToFacebookStory('https%3A%2F%2Fstorage.googleapis.com%2Fhah-staging-bucket%2Fline%2F0a88888c-123f-471a-a1e7-41e78704603d.jpeg')
-    })
+    document.getElementById('share-btn').addEventListener('click', async () => {
+      const imageUrl = 'https://storage.googleapis.com/hah-staging-bucket/line/0a88888c-123f-471a-a1e7-41e78704603d.jpeg';
+      const res = await fetch(imageUrl);
+      const blob = await res.blob();
+
+      await shareImage(imageUrl, blob);
+    });
   </script>
 </body>
 </html>
-
