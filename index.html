@@ -1,100 +1,40 @@
-<!doctype html>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>เฮลท์ แอท เวิร์ค</title>
-<meta name="theme-color" content="#3FD19E">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-<link href="https://fonts.googleapis.com/css?family=Kanit:300,400,500,600,700&amp;subset=thai" rel="stylesheet">
-<link rel="icon" type="image/png" href="https://storage.healthathome.in.th/887e2467-f263-4f1e-8f14-2555e1c91074.png">
-<script src="https://static.line-scdn.net/liff/edge/versions/2.18.1/sdk.js"></script>
-<style >
-	body, html {
-		margin: 0;
-		padding: 0;
-		font-size: 16px;
-	}
-	
-	p {
-		margin: 0px;
-		line-height: 150%;
-	}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แชร์รูปไป Facebook Story</title>
+</head>
+<body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
 
-	.container {
-		width: calc(100% - 48px);
-		height: 100vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 0px 24px;
-	}
+  <h2>แชร์รูปไป Facebook Story</h2>
+  <button id="share-btn" style="padding: 10px 20px; font-size: 16px;">
+    📸 แชร์ไป Story
+  </button>
 
-	.detail {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		margin-top: -96px;
-	}
-	
-	.image-container {
-		display: flex;
-		padding: 0px 36px;
-		width:  calc(100% - 72px);
-	}
+  <script>
+    function shareToFacebookStory(imageUrl) {
+      const storyUrl = `fb://story-camera?media_url=${encodeURIComponent(imageUrl)}`
 
-	.header {
-		font-family: 'Kanit';
-		font-weight: 500;
-		font-size: 1.375rem;
-		color: #283332;
-		text-align: center;
-		margin-top: 24px;
-	}
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
-	.sub-header {
-		font-family: 'Kanit';
-		font-weight: 400;
-		font-size: 1rem;
-		color: #A2A7B2;
-		text-align: center;
-		margin-top: 8px;
-	}
+      if (isMobile) {
+        // ✅ พยายามเปิด Facebook App
+        window.location.href = storyUrl
 
-	.footer-container {
-		position: fixed;
-		bottom: 16px;
-		width: calc(100% - 48px)
-	}
+        // ⚠️ fallback กรณีเปิดไม่ติด
+        setTimeout(() => {
+          alert('ไม่สามารถเปิด Facebook Story ได้ ลองแชร์ด้วยมือแทนค้าบ ❤️')
+        }, 1500)
+      } else {
+        alert('การแชร์ไปยัง Story รองรับเฉพาะบน Mobile เท่านั้น')
+      }
+    }
 
-	.submit-button {
-		font-family: 'Kanit';
-		font-weight: 400;
-		font-size: 1rem;
-		outline: none;
-		color: #FFFFFF;
-		background-color: #3FD19E;
-		border: 1px solid #3FD19E;
-		height: 40px;
-		border-radius: 20px;
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-</style>
-<body>
-	<div class="container">
-		<div class="detail">
-			<div class="image-container">
-				<img src='https://storage.healthathome.in.th/e4f466b8-27c4-4682-b825-0dd99e3a62fa.svg' width="100%">
-			</div>
-			<p class="header">ขออภัยค่ะ<br>เราปิดปรับปรุงระบบชั่วคราว</p>
-			<p class="sub-header">ตั้งแต่วันที่ 11/01/22 เวลา 18.00 น.<br> ถึง 12/01/22 เวลา 07.00 น.</p>
-		</div>
-		<div class="footer-container">
-			<button onclick="liff.closeWindow()" class="submit-button">
-				โอเค
-			</button>
-		</div>
-	</div>
+    // เมื่อกดปุ่ม
+    document.getElementById('share-btn').addEventListener('click', () => {
+      shareToFacebookStory('https://storage.googleapis.com/hah-staging-bucket/line/0a88888c-123f-471a-a1e7-41e78704603d.jpeg')
+    })
+  </script>
 </body>
+</html>
