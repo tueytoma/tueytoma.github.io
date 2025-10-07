@@ -3,51 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>แชร์รูปภาพด้วย Web Share API</title>
+  <title>แชร์รูปภาพผ่าน Web Share API</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      text-align: center;
+      margin-top: 60px;
+    }
+    img {
+      max-width: 90%;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1877f2;
+      color: white;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
-  <h2>แชร์รูปภาพไป Facebook หรือ Story</h2>
-
-  <button id="share-btn" style="padding: 10px 20px; font-size: 16px;">
-    📤 แชร์รูปภาพ 3
-  </button>
+<body>
+  <h2>แชร์รูปนี้ผ่านระบบแชร์ของมือถือ</h2>
+  <img id="preview" src="https://storage.googleapis.com/hah-staging-bucket/line/0a88888c-123f-471a-a1e7-41e78704603d.jpeg" alt="แชร์รูปภาพ" />
+  <br />
+  <button id="share-btn">📤 แชร์รูปภาพ</button>
 
   <script>
-    async function shareImage(imageUrl, imageBlob) {
+    const imageUrl = "https://storage.googleapis.com/hah-staging-bucket/line/0a88888c-123f-471a-a1e7-41e78704603d.jpeg";
+
+    document.getElementById("share-btn").addEventListener("click", async () => {
       try {
-        // ✅ ถ้า browser รองรับ Web Share API + file sharing
-        if (navigator.canShare && navigator.canShare({ files: [new File([imageBlob], 'image.jpg', { type: 'image/jpeg' })] })) {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+
+        // ตรวจสอบว่าระบบแชร์ไฟล์ได้ไหม
+        const file = new File([blob], "image.jpg", { type: "image/jpeg" });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
           await navigator.share({
-            files: [new File([imageBlob], 'image.jpg', { type: 'image/jpeg' })],
-            title: 'Share to Facebook Story',
-            text: 'แชร์ภาพนี้ไปยัง Facebook Story 📸',
+            files: [file],
+            title: "แชร์รูปภาพ",
+            text: "แชร์รูปนี้ผ่านระบบแชร์ของมือถือ 📸",
           });
-          console.log('แชร์สำเร็จ');
-        } else if (navigator.share) {
-          // ✅ รองรับ share แต่ไม่รองรับไฟล์ (เช่น iOS Safari เก่า)
-          await navigator.share({
-            url: imageUrl,
-            title: 'Share to Facebook Story',
-            text: 'แชร์ภาพนี้ไปยัง Facebook 📸',
-          });
+          console.log("แชร์สำเร็จ!");
         } else {
-          // ❌ ไม่มี Web Share API → เปิดลิงก์ Facebook แทน
-          window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(imageUrl)}`,
-            '_blank'
-          );
+          alert("เบราว์เซอร์นี้ไม่รองรับการแชร์ไฟล์ 😅");
         }
-      } catch (error) {
-        console.log('ยกเลิกการแชร์หรือเกิดข้อผิดพลาด:', error);
+      } catch (err) {
+        console.error("เกิดข้อผิดพลาดหรือยกเลิกการแชร์:", err);
       }
-    }
-
-    document.getElementById('share-btn').addEventListener('click', async () => {
-      const imageUrl = 'https://storage.googleapis.com/hah-staging-bucket/line/0a88888c-123f-471a-a1e7-41e78704603d.jpeg';
-      const res = await fetch(imageUrl);
-      const blob = await res.blob();
-
-      await shareImage(imageUrl, blob);
     });
   </script>
 </body>
