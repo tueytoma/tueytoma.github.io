@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือทำความเข้าใจ Web Performance Metrics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Prompt', sans-serif; scroll-behavior: smooth; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <header class="bg-gradient-to-r py-16 px-4 text-center text-white relative shadow-md" style="background-image: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+        <div class="max-w-4xl mx-auto">
+            <span class="bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Web Optimization Guide</span>
+            <h1 class="text-3xl md:text-5xl font-bold mt-4 mb-4 leading-tight">
+                คู่มือทำความเข้าใจ Web Performance Metrics & วิธีเพิ่มความเร็วหน้าเว็บ
+            </h1>
+            <p class="text-blue-100 text-base md:text-lg max-w-2xl mx-auto font-light">
+                ความเร็วของหน้าเว็บส่งผลโดยตรงต่อการจัดอันดับ SEO และประสบการณ์ผู้ใช้ เรียนรู้วิธีเปลี่ยนเว็บหน่วงให้ลื่นไหลทะลุนรกด้วย Core Web Vitals
+            </p>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 bg-white/95 backdrop-blur shadow-sm z-50 border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-4 overflow-x-auto whitespace-nowrap py-3 flex justify-center space-x-2 md:space-x-4">
+            <a href="#fcp" class="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 font-medium rounded-lg text-sm transition">FCP</a>
+            <a href="#lcp" class="px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-700 font-medium rounded-lg text-sm transition">LCP</a>
+            <a href="#inp" class="px-3 py-1.5 bg-yellow-50 hover:bg-yellow-100 text-yellow-800 font-medium rounded-lg text-sm transition">INP</a>
+            <a href="#cls" class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium rounded-lg text-sm transition">CLS</a>
+            <a href="#tbt" class="px-3 py-1.5 bg-purple-50 hover:bg-purple-100 text-purple-700 font-medium rounded-lg text-sm transition">TBT</a>
+            <a href="#si" class="px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 font-medium rounded-lg text-sm transition">SI</a>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-4 py-12 space-y-16">
+
+        <section id="fcp" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition hover:shadow-md">
+            <div class="p-6 md:p-8 bg-gradient-to-r from-red-50 to-transparent border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="flex h-4 w-4 rounded-full bg-red-500 animate-pulse"></span>
+                    <h2 class="text-2xl font-bold text-gray-900">First Contentful Paint (FCP)</h2>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded">&le; 1.8s ดี</span>
+                    <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded">1.8s - 3s ควรปรับปรุง</span>
+                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded">&gt; 3s แย่</span>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8 grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">มันคืออะไร?</h3>
+                        <p class="mt-1 text-gray-600">เวลาที่เบราว์เซอร์ใช้ในการแสดงผลเนื้อหาชิ้นแรกสุดจาก DOM เช่น ข้อความ รูปภาพ หรือปุ่มตัวแรกสุดหลังจากกดเข้าเว็บ</p>
+                    </div>
+                    <div class="p-4 bg-red-50 border-l-4 border-red-500 rounded-r-lg">
+                        <h4 class="font-semibold text-red-800 text-sm">❌ ตัวอย่างที่แย่ (ฝันร้ายของผู้ใช้)</h4>
+                        <p class="text-xs text-red-700 mt-1">หน้าเว็บผูกมัดไฟล์ CSS หรือ JavaScript ขนาดใหญ่หนักอึ้งไว้ที่ Header เบราว์เซอร์ต้องรอโหลดจนเสร็จ ทำให้ผู้ใช้จ้องหน้าจอขาวว่างเปล่า (Blank Screen) นานเกิน 3 วินาที</p>
+                    </div>
+                    <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                        <h4 class="font-semibold text-green-800 text-sm">🛡️ วิธีแก้ไขและแนวทางปฏิบัติ</h4>
+                        <ul class="text-xs text-green-700 mt-1 list-disc list-inside space-y-1">
+                            <li>ทำ <strong>Critical CSS</strong> แยกโค้ดสไตล์ส่วนบนสุดมาโหลดก่อน</li>
+                            <li>ใช้คำสั่ง <strong>Defer</strong> หรือ Async ปล่อยให้ JavaScript โหลดทีหลังไม่ให้บล็อกการวาดหน้าจอ</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">เปรียบเทียบการแสดงผล (Visual Comparison)</h3>
+                    <div class="grid grid-cols-2 gap-4 h-48">
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white">
+                            <div class="bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 border-b border-gray-200">Before (ค้างจอขาว)</div>
+                            <div class="flex-1 flex items-center justify-center bg-gray-100 relative">
+                                <span class="text-xs text-gray-400">หน้าจอขาวว่างเปล่า (3.5 วินาที)</span>
+                                <div class="absolute inset-0 bg-white m-4 border border-dashed border-gray-200 rounded flex items-center justify-center"></div>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white">
+                            <div class="bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 border-b border-green-100">After (ขึ้นไวใน 0.8s)</div>
+                            <div class="flex-1 p-4 bg-white space-y-2 text-xs">
+                                <div class="flex justify-between items-center pb-2 border-b">
+                                    <div class="h-4 w-12 bg-blue-600 rounded"></div>
+                                    <div class="h-2 w-8 bg-gray-200 rounded"></div>
+                                </div>
+                                <div class="h-3 w-3/4 bg-gray-400 rounded"></div>
+                                <div class="h-2 w-full bg-gray-200 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="lcp" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition hover:shadow-md">
+            <div class="p-6 md:p-8 bg-gradient-to-r from-orange-50 to-transparent border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="flex h-4 w-4 rounded-full bg-orange-500"></span>
+                    <h2 class="text-2xl font-bold text-gray-900">Largest Contentful Paint (LCP) <span class="text-xs font-normal text-orange-600 border border-orange-200 px-1.5 py-0.5 rounded ml-1">Core Web Vitals</span></h2>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded">&le; 2.5s ดี</span>
+                    <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded">2.5s - 4s ควรปรับปรุง</span>
+                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded">&gt; 4s แย่</span>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8 grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">มันคืออะไร?</h3>
+                        <p class="mt-1 text-gray-600">เวลาที่ใช้ในการแสดงผลองค์ประกอบหลักที่มีขนาด "ใหญ่ที่สุด" ในส่วนที่ผู้ใช้มองเห็นครั้งแรก (เช่น รูปภาพแบนเนอร์ Hero Image หรือกล่องข้อความพาดหัวหลัก)</p>
+                    </div>
+                    <div class="p-4 bg-orange-50 border-l-4 border-orange-500 rounded-r-lg">
+                        <h4 class="font-semibold text-orange-800 text-sm">❌ ตัวอย่างที่แย่</h4>
+                        <p class="text-xs text-orange-700 mt-1">ใช้ภาพแบนเนอร์ความละเอียดสูงสัดส่วนไม่ได้บีบอัดไฟล์ล่อไป 5MB แถมโหลดผ่านคำสั่ง JavaScript ตัวท้ายๆ ทำให้อ่านตัวหนังสือจบแล้วรูปใหญ่ตรงกลางก็ยังไม่ขึ้น</p>
+                    </div>
+                    <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                        <h4 class="font-semibold text-green-800 text-sm">🛡️ วิธีแก้ไขและแนวทางปฏิบัติ</h4>
+                        <ul class="text-xs text-green-700 mt-1 list-disc list-inside space-y-1">
+                            <li>แปลงรูปภาพเป็นฟอร์แมตยุคใหม่ เช่น <strong>WebP / AVIF</strong> และบีบอัดให้เหมาะสม</li>
+                            <li>ใส่แท็ก <code>&lt;link rel="preload"&gt;</code> ที่รูปภาพหลักเพื่อสั่งเบราว์เซอร์ให้ดึงภาพทันทีตั้งแต่เริ่ม</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">เปรียบเทียบการแสดงผล (Visual Comparison)</h3>
+                    <div class="grid grid-cols-2 gap-4 h-48">
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white">
+                            <div class="bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 border-b border-gray-200">Before (รูปโหลดทีละบล็อก)</div>
+                            <div class="flex-1 p-3 bg-white space-y-2 text-xs relative">
+                                <div class="h-3 w-1/3 bg-gray-300 rounded"></div>
+                                <div class="h-24 w-full bg-gray-100 rounded border border-dashed border-gray-300 flex items-center justify-center text-[10px] text-gray-400">
+                                    🖼️ รูปกำลังทยอยวิ่งทีละเลเยอร์...
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white">
+                            <div class="bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 border-b border-green-100">After (รูปมาพร้อมข้อความ)</div>
+                            <div class="flex-1 p-3 bg-white space-y-2 text-xs">
+                                <div class="h-3 w-1/3 bg-gray-300 rounded"></div>
+                                <div class="h-24 w-full bg-blue-100 rounded relative overflow-hidden flex items-center justify-center">
+                                    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=300&q=80');"></div>
+                                    <span class="relative bg-black/4xl text-white px-1.5 py-0.5 rounded text-[10px] bg-black/40">Hero Banner Loaded</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="inp" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition hover:shadow-md">
+            <div class="p-6 md:p-8 bg-gradient-to-r from-yellow-50 to-transparent border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="flex h-4 w-4 rounded-full bg-yellow-500"></span>
+                    <h2 class="text-2xl font-bold text-gray-900">Interaction to Next Paint (INP) <span class="text-xs font-normal text-yellow-700 border border-yellow-200 px-1.5 py-0.5 rounded ml-1">Core Web Vitals</span></h2>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded">&le; 200ms ดี</span>
+                    <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded">200ms - 500ms ปรับปรุง</span>
+                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded">&gt; 500ms แย่</span>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8 grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">มันคืออะไร?</h3>
+                        <p class="mt-1 text-gray-600">ตัวชี้วัดความลื่นไหลในการตอบสนองของหน้าเว็บ โดยวัดเวลาตั้งแต่ผู้ใช้คลิกปุ่ม แตะลิงก์ หรือพิมพ์งาน ไปจนถึงขั้นตอนที่หน้าจอกลับมาอัปเดตตอบสนองภาพถัดไป</p>
+                    </div>
+                    <div class="p-4 bg-yellow-50/50 border-l-4 border-yellow-500 rounded-r-lg">
+                        <h4 class="font-semibold text-yellow-800 text-sm">❌ ตัวอย่างที่แย่</h4>
+                        <p class="text-xs text-yellow-700 mt-1">กดปุ่ม 'หยิบใส่ตะกร้า' แล้วระบบค้างนิ่งสนิทไป 1 วินาที เพราะสคริปต์เบื้องหลังกำลังทำงานประมวลผลหนักหน่วงขวางทาง Main Thread ทำให้ผู้ใช้หงุดหงิดกดซ้ำรัวๆ</p>
+                    </div>
+                    <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                        <h4 class="font-semibold text-green-800 text-sm">🛡️ วิธีแก้ไขและแนวทางปฏิบัติ</h4>
+                        <ul class="text-xs text-green-700 mt-1 list-disc list-inside space-y-1">
+                            <li>ใช้โครงสร้าง API ใหม่ <code>scheduler.yield()</code> เพื่อแบ่งย่อยงานสคริปต์ก้อนใหญ่ให้เบราว์เซอร์หายใจคล่องขึ้น</li>
+                            <li>หากงานหนักจริง ให้เขียนผลลัพธ์ด่วนด้วยการแสดง Loading Spinner ทันทีที่คลิก</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">เปรียบเทียบการแสดงผล (Visual Comparison)</h3>
+                    <div class="grid grid-cols-2 gap-4 h-48">
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white">
+                            <div class="bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 border-b border-gray-200">Before (คลิกแล้วค้างนิ่ง)</div>
+                            <div class="flex-1 p-4 flex flex-col items-center justify-center bg-gray-50">
+                                <button class="px-4 py-2 bg-blue-600 text-white rounded shadow text-xs cursor-pointer">เพิ่มลงตะกร้าสินค้า</button>
+                                <span class="text-[10px] text-red-500 mt-2 font-medium">⚠️ เว็บแน่นิ่งไป 1.2 วินาที</span>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white">
+                            <div class="bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 border-b border-green-100">After (ตอบสนองไวทันใจ)</div>
+                            <div class="flex-1 p-4 flex flex-col items-center justify-center bg-white">
+                                <button class="px-4 py-2 bg-green-600 text-white rounded shadow text-xs flex items-center space-x-1">
+                                    <svg class="animate-spin h-3 w-3 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                                    <span>กำลังประมวลผล...</span>
+                                </button>
+                                <span class="text-[10px] text-green-600 mt-2 font-medium">✨ โชว์สถานะทันทีใน 50ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="cls" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition hover:shadow-md">
+            <div class="p-6 md:p-8 bg-gradient-to-r from-blue-50 to-transparent border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="flex h-4 w-4 rounded-full bg-blue-500"></span>
+                    <h2 class="text-2xl font-bold text-gray-900">Cumulative Layout Shift (CLS) <span class="text-xs font-normal text-blue-600 border border-blue-200 px-1.5 py-0.5 rounded ml-1">Core Web Vitals</span></h2>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded">&le; 0.1 ดี</span>
+                    <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded">0.1 - 0.25 ปรับปรุง</span>
+                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded">&gt; 0.25 แย่</span>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8 grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">มันคืออะไร?</h3>
+                        <p class="mt-1 text-gray-600">การวัดความเสถียรของหน้าเว็บ ตรวจสอบว่าองค์ประกอบต่างๆ มีการขยับ เลื่อน หรือกระโดดไปมาอย่างกะทันหันระหว่างที่โหลดหน้าเว็บหรือไม่</p>
+                    </div>
+                    <div class="p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                        <h4 class="font-semibold text-blue-800 text-sm">❌ ตัวอย่างที่แย่</h4>
+                        <p class="text-xs text-blue-700 mt-1">ผู้ใช้กำลังจะเอานิ้วกดปุ่ม "ยกเลิก" แต่อยู่ดีๆ แบนเนอร์โฆษณาด้านบนเพิ่งโหลดเสร็จ ดันเนื้อหาลงมาข้างล่างฉับพลัน ทำให้กดผิดไปโดนปุ่ม "ยืนยันการจ่ายเงิน" แทน</p>
+                    </div>
+                    <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                        <h4 class="font-semibold text-green-800 text-sm">🛡️ วิธีแก้ไขและแนวทางปฏิบัติ</h4>
+                        <ul class="text-xs text-green-700 mt-1 list-disc list-inside space-y-1">
+                            <li>ระบุขนาดกว้างและสูงที่แน่นอนให้กับรูปภาพและกรอบโฆษณาเสมอ เช่น <code>width="" height=""</code> ใน HTML</li>
+                            <li>จองพื้นที่ (Aspect Ratio Boxes) รอไว้ เพื่อไม่ให้เนื้อหากระเด้งเมื่อโหลดเสร็จ</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">เปรียบเทียบการแสดงผล (Visual Comparison)</h3>
+                    <div class="grid grid-cols-2 gap-4 h-48">
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white relative">
+                            <div class="bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-500 border-b border-gray-200">Before (เนื้อหากระโดดเบียดลง)</div>
+                            <div class="flex-1 p-3 space-y-2 text-xs bg-white">
+                                <div class="bg-yellow-400 text-black p-1 text-center font-bold text-[9px] rounded shadow animate-bounce">⚡ โฆษณาเพิ่งโผล่มาแทรก!</div>
+                                <div class="h-3 w-full bg-gray-200 rounded"></div>
+                                <div class="h-8 w-16 bg-red-500 rounded text-white flex items-center justify-center text-[10px]">ปุ่มโดนดันตก</div>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-xl overflow-hidden flex flex-col bg-white">
+                            <div class="bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 border-b border-green-100">After (จองพื้นที่ล่วงหน้าค้างไว้)</div>
+                            <div class="flex-1 p-3 space-y-2 text-xs bg-white">
+                                <div class="h-8 w-full bg-gray-100 border border-dashed border-gray-300 flex items-center justify-center text-[9px] text-gray-400 rounded">พื้นที่โฆษณา (จองไว้แล้ว)</div>
+                                <div class="h-3 w-full bg-gray-200 rounded"></div>
+                                <div class="h-8 w-16 bg-red-500 rounded text-white flex items-center justify-center text-[10px]">ปุ่มนิ่งคงที่</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tbt" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition hover:shadow-md">
+            <div class="p-6 md:p-8 bg-gradient-to-r from-purple-50 to-transparent border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="flex h-4 w-4 rounded-full bg-purple-500"></span>
+                    <h2 class="text-2xl font-bold text-gray-900">Total Blocking Time (TBT)</h2>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded">&le; 200ms ดี</span>
+                    <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded">200ms - 600ms ปรับปรุง</span>
+                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded">&gt; 600ms แย่</span>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8 grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">มันคืออะไร?</h3>
+                        <p class="mt-1 text-gray-600">เวลารวมที่เบราว์เซอร์โดน "บล็อก" โดยสคริปต์งานเดี่ยวที่ประมวลผลยาวนานเกิน 50ms (Long Tasks) ในระหว่างหน้าเว็บกำลังโหลด ส่งผลกระทบโดยตรงต่อความหน่วง</p>
+                    </div>
+                    <div class="p-4 bg-purple-50 border-l-4 border-purple-500 rounded-r-lg">
+                        <h4 class="font-semibold text-purple-800 text-sm">❌ ตัวอย่างที่แย่</h4>
+                        <p class="text-xs text-purple-700 mt-1">หน้าเว็บยัดไฟล์ปลั๊กอิน สคริปต์สถิติแทร็กพฤติกรรมจากภายนอก (Third-party) เยอะจนล้น หน้าเว็บขึ้นโครงปุ่มครบหมดแล้ว แต่ผู้ใช้นิ้วเลื่อนหน้าจอไม่ได้ เคาะเมนูเท่าไหร่ก็แข็งทื่อ</p>
+                    </div>
+                    <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                        <h4 class="font-semibold text-green-800 text-sm">🛡️ วิธีแก้ไขและแนวทางปฏิบัติ</h4>
+                        <ul class="text-xs text-green-700 mt-1 list-disc list-inside space-y-1">
+                            <li>ตัดสคริปต์ขยะที่ไม่ได้ใช้งานทิ้ง ลด ละ การพึ่งพา Third-party scripts</li>
+                            <li>ใช้เทคโนโลยี <strong>Web Workers</strong> แยกงานประมวลผลหนักๆ ไปรันฉากหลัง ไม่ขัดขวาง Main Thread</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">ภาพจำลองเส้นเวลาของ CPU (Main Thread Timeline)</h3>
+                    <div class="p-4 bg-gray-900 text-white rounded-xl space-y-4 text-xs font-mono">
+                        <div>
+                            <span class="text-red-400 text-[10px]">Before: Long Task (Blocked!)</span>
+                            <div class="w-full bg-red-600 h-6 rounded mt-1 flex items-center px-2 text-[10px] font-bold">JavaScript Heavy Task (350ms) -> เกินเกณฑ์ส่งผลให้เว็บค้าง</div>
+                        </div>
+                        <div>
+                            <span class="text-green-400 text-[10px]">After: Broken down tasks (Smooth)</span>
+                            <div class="flex space-x-1 mt-1">
+                                <div class="bg-green-600 h-6 w-12 rounded flex items-center justify-center text-[9px]">40ms</div>
+                                <div class="bg-gray-700 h-6 w-8 rounded flex items-center justify-center text-[9px] text-gray-400">Free</div>
+                                <div class="bg-green-600 h-6 w-16 rounded flex items-center justify-center text-[9px]">45ms</div>
+                                <div class="bg-gray-700 h-6 w-10 rounded flex items-center justify-center text-[9px] text-gray-400">Free</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="si" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition hover:shadow-md">
+            <div class="p-6 md:p-8 bg-gradient-to-r from-green-50 to-transparent border-b border-gray-100 flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center space-x-3">
+                    <span class="flex h-4 w-4 rounded-full bg-green-500"></span>
+                    <h2 class="text-2xl font-bold text-gray-900">Speed Index (SI)</h2>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold">
+                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded">&le; 3.4s ดี</span>
+                    <span class="px-2.5 py-1 bg-yellow-100 text-yellow-700 rounded">3.4s - 5.8s ปรับปรุง</span>
+                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded">&gt; 5.8s แย่</span>
+                </div>
+            </div>
+            
+            <div class="p-6 md:p-8 grid md:grid-cols-2 gap-8">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">มันคืออะไร?</h3>
+                        <p class="mt-1 text-gray-600">ดัชนีภาพรวมความเร็วความพร้อมที่วัดว่าเนื้อหาทั้งหมดในหน้าจอแรก (Above the fold) ค่อยๆ โผล่แสดงผลสมบูรณ์เต็มตาได้ลื่นไหลเรียบร้อยเร็วเพียงใด</p>
+                    </div>
+                    <div class="p-4 bg-green-50/50 border-l-4 border-green-600 rounded-r-lg">
+                        <h4 class="font-semibold text-green-800 text-sm">❌ ตัวอย่างที่แย่</h4>
+                        <p class="text-xs text-green-700 mt-1">ส่วนประกอบหน้าต่างกระจัดกระจาย โหลดกล่องสีเหลี่ยมขึ้นมาก่อน ทิ้งช่วงนิ่ง แล้วปุ่มค่อยกระตุกตามมาทีหลัง โหลดติดขัดสะดุดสายตา</p>
+                    </div>
+                    <div class="p-4 bg-green-50 border-l-4 border-green-500 rounded-r-lg">
+                        <h4 class="font-semibold text-green-800 text-sm">🛡️ วิธีแก้ไขและแนวทางปฏิบัติ</h4>
+                        <ul class="text-xs text-green-700 mt-1 list-disc list-inside space-y-1">
+                            <li>จัดลำดับความสำคัญของโครงสร้าง จัดส่งเฉพาะข้อมูลที่จะฉายในจอแรกให้ไวที่สุด</li>
+                            <li>เปิดใช้งานโครงสร้าง <strong>Lazy Loading</strong> กับรูปภาพหรือวิดเจ็ตที่อยู่ครึ่งล่างของเว็บลงไปเพื่อไม่แย่งแบนด์วิดท์ชิ้นแรก</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="text-sm font-semibold uppercase tracking-wider text-gray-400">ความต่อเนื่องทางสายตา (Visual Progression Timeline)</h3>
+                    <div class="space-y-2 text-xs">
+                        <div class="flex items-center space-x-2 bg-white p-2 border rounded-lg">
+                            <span class="w-16 font-medium text-gray-500">1.0 วินาที:</span>
+                            <div class="flex-1 flex space-x-1"><div class="h-2 w-12 bg-gray-200 rounded"></div><div class="h-2 w-full bg-gray-200 rounded"></div></div>
+                        </div>
+                        <div class="flex items-center space-x-2 bg-white p-2 border rounded-lg">
+                            <span class="w-16 font-medium text-gray-500">2.0 วินาที:</span>
+                            <div class="flex-1 flex flex-col space-y-1"><div class="h-2 w-1/3 bg-blue-500 rounded"></div><div class="h-2 w-full bg-gray-300 rounded"></div><div class="h-8 w-full bg-gray-100 rounded"></div></div>
+                        </div>
+                        <div class="flex items-center space-x-2 bg-green-50 p-2 border border-green-200 rounded-lg">
+                            <span class="w-16 font-medium text-green-700">3.0 วินาที:</span>
+                            <div class="flex-1 text-green-700 font-medium">🎉 หน้าจอสมบูรณ์เรียบร้อยครบถ้วน!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-900 text-gray-400 py-12 mt-20 border-t border-gray-800 px-4">
+        <div class="max-w-4xl mx-auto text-center space-y-4">
+            <div class="inline-block p-2 bg-blue-950 text-blue-400 rounded-xl border border-blue-900 text-sm max-w-xl mx-auto">
+                💡 <strong>ข้อควรจำ:</strong> คะแนนทดสอบจากห้องแล็บ (Lab Data เช่น Lighthouse) คือการจำลอง แต่วัดผลจริงหน้างานต้องดูข้อมูลผู้ใช้งานจริงภาคสนาม <strong>(Field Data / CrUX)</strong> เสมอ!
+            </div>
+            <p class="text-xs text-gray-500 mt-6">
+                Web Performance Metrics Education Portal &copy; 2026 — ร่วมสร้างสรรค์เว็บไซต์ที่เร็ว แรง และยั่งยืนสำหรับทุกคน
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
